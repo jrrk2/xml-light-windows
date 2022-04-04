@@ -15,50 +15,50 @@ LIBS=
 NATDYNLINK := $(shell if [ -f `ocamlc -where`/dynlink.cmxa ]; then echo YES; else echo NO; fi)
 
 ifeq "${NATDYNLINK}" "YES"
-CMXS=xml-light.cmxs
+CMXS=xml-light-windows.cmxs
 endif
 
 
-all: xml-light.cma test.exe doc
+all: xml-light-windows.cma test.exe doc
 
-opt: xml-light.cmxa $(CMXS) test_opt.exe
+opt: xml-light-windows.cmxa $(CMXS) test_opt.exe
 
 installcommon: all
 	cp xml.mli xmlParser.mli dtd.mli xml.cmi xmlParser.cmi dtd.cmi $(INSTALLDIR)
 
 installbyte: all installcommon
-	cp xml-light.cma $(INSTALLDIR)
+	cp xml-light-windows.cma $(INSTALLDIR)
 
 installopt: opt installcommon
-	cp xml-light.a xml-light.cmxa $(CMXS) xml.cmx dtd.cmx xmlParser.cmx $(INSTALLDIR)
+	cp xml-light-windows.a xml-light-windows.cmxa $(CMXS) xml.cmx dtd.cmx xmlParser.cmx $(INSTALLDIR)
 
 install: installbyte installopt
 
 wininstall: all opt
-	cp xml-light.cmxa xml-light.lib xml-light.cma xml.mli xmlParser.mli dtd.mli xml.cmi xmlParser.cmi dtd.cmi xml.cmx dtd.cmx xmlParser.cmx c:\ocaml\lib
+	cp xml-light-windows.cmxa xml-light-windows.lib xml-light-windows.cma xml.mli xmlParser.mli dtd.mli xml.cmi xmlParser.cmi dtd.cmi xml.cmx dtd.cmx xmlParser.cmx c:\ocaml\lib
 
 install_ocamlfind: all opt
 	sed "s|@VERSION@|$(VERSION)|g" < META.in > META
-	$(OCAMLFIND) install xml-light META xml-light.a xml-light.cma xml-light.cmxa $(CMXS) xml.cmx dtd.cmx xmlParser.cmx xml.mli xmlParser.mli dtd.mli xml.cmi xmlParser.cmi dtd.cmi
+	$(OCAMLFIND) install xml-light-windows META xml-light-windows.a xml-light-windows.cma xml-light-windows.cmxa $(CMXS) xml.cmx dtd.cmx xmlParser.cmx xml.mli xmlParser.mli dtd.mli xml.cmi xmlParser.cmi dtd.cmi
 
 doc:
-	mkdir doc
+	mkdir -p doc
 	ocamldoc -sort -html -d doc xml.mli dtd.mli xmlParser.mli
 
-test.exe: xml-light.cma
-	$(OCAMLC) xml-light.cma test.ml -o test.exe
+test.exe: xml-light-windows.cma
+	$(OCAMLC) xml-light-windows.cma test.ml -o test.exe
 
-test_opt.exe: xml-light.cmxa
-	$(OCAMLOPT) xml-light.cmxa test.ml -o test_opt.exe
+test_opt.exe: xml-light-windows.cmxa
+	$(OCAMLOPT) xml-light-windows.cmxa test.ml -o test_opt.exe
 
-xml-light.cma: xml_parser.cmo xml_lexer.cmo dtd.cmo xmlParser.cmo xml.cmo 
-	$(OCAMLC) -o xml-light.cma $(LFLAGS) $(LIBS) xml_parser.cmo xml_lexer.cmo dtd.cmo xmlParser.cmo xml.cmo
+xml-light-windows.cma: xml_parser.cmo xml_lexer.cmo dtd.cmo xmlParser.cmo xml.cmo 
+	$(OCAMLC) -o xml-light-windows.cma $(LFLAGS) $(LIBS) xml_parser.cmo xml_lexer.cmo dtd.cmo xmlParser.cmo xml.cmo
 
-xml-light.cmxa: xml_parser.cmx xml_lexer.cmx dtd.cmx xmlParser.cmx xml.cmx 
-	$(OCAMLOPT) -o xml-light.cmxa $(LFLAGS) $(LIBS) xml_parser.cmx xml_lexer.cmx dtd.cmx xmlParser.cmx xml.cmx
+xml-light-windows.cmxa: xml_parser.cmx xml_lexer.cmx dtd.cmx xmlParser.cmx xml.cmx 
+	$(OCAMLOPT) -o xml-light-windows.cmxa $(LFLAGS) $(LIBS) xml_parser.cmx xml_lexer.cmx dtd.cmx xmlParser.cmx xml.cmx
 
-xml-light.cmxs: xml-light.cmxa
-	$(OCAMLOPT) -shared -linkall -I . -o xml-light.cmxs xml-light.cmxa
+xml-light-windows.cmxs: xml-light-windows.cmxa
+	$(OCAMLOPT) -shared -linkall -I . -o xml-light-windows.cmxs xml-light-windows.cmxa
 
 dtd.cmo: xml.cmi xml_lexer.cmi dtd.cmi
 
@@ -91,8 +91,8 @@ xml_lexer.cmo: xml_lexer.ml xml_lexer.cmi
 xml_lexer.cmx: xml_lexer.ml xml_lexer.cmi
 
 clean:
-	rm -f xml-light.cma test.exe dtd.cmo dtd.cmi test.cmo test.cmi xml.cmo xml.cmi xmlParser.cmo xmlParser.cmi dtd.cmi xml.cmi xmlParser.cmi xml_lexer.cmi xml_lexer.cmo xml_lexer.ml xml_parser.mli xml_parser.cmi xml_parser.ml xml_parser.cmo
-	rm -f xml-light.lib xml-light.a xml-light.cmxa test_opt.exe dtd.cmx dtd.obj dtd.o test.cmx test.obj test.o xml.cmx xml.obj xml.o xmlParser.cmx xmlParser.obj xmlParser.o xml_lexer.cmx xml_lexer.obj xml_lexer.o xml_parser.cmx xml_parser.obj xml_parser.o
+	rm -f xml-light-windows.cma test.exe dtd.cmo dtd.cmi test.cmo test.cmi xml.cmo xml.cmi xmlParser.cmo xmlParser.cmi dtd.cmi xml.cmi xmlParser.cmi xml_lexer.cmi xml_lexer.cmo xml_lexer.ml xml_parser.mli xml_parser.cmi xml_parser.ml xml_parser.cmo
+	rm -f xml-light-windows.lib xml-light-windows.a xml-light-windows.cmxa test_opt.exe dtd.cmx dtd.obj dtd.o test.cmx test.obj test.o xml.cmx xml.obj xml.o xmlParser.cmx xmlParser.obj xmlParser.o xml_lexer.cmx xml_lexer.obj xml_lexer.o xml_parser.cmx xml_parser.obj xml_parser.o
 
 
 # SUFFIXES
